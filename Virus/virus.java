@@ -4,15 +4,15 @@ import java.util.Scanner;
 public class virus {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
-        int[][] map = {{1,0,0,0,0,0,0,2},
-                       {0,0,0,0,0,0,0,0},
-                       {0,0,0,0,0,0,0,0},
-                       {0,0,0,0,0,0,0,0},
+        int[][] map = {{1,0,0,0,0,0,1,2},
+                       {0,0,0,0,0,0,1,0},
+                       {0,0,0,0,2,2,1,1},
+                       {0,0,0,0,2,0,0,0},
                        {0,0,0,0,0,0,0,0},
                        {0,0,0,0,0,0,0,0},
                        {0,0,0,0,0,0,0,0},
                        {2,0,0,0,0,0,0,1}};
-//        int[][] map = {{1,1,1,1,1,1,0,1},
+//        int[][] map = {{1,1,1,1,1,1,0,2},
 //                {1,1,1,1,1,1,1,1},
 //                {1,1,1,1,1,1,1,1},
 //                {1,1,1,1,1,1,1,1},
@@ -21,6 +21,7 @@ public class virus {
 //                {1,1,1,1,1,1,1,1},
 //                {1,1,1,1,1,1,1,1}};
         print(map);
+
         while(!isGameOver(map)) {
             System.out.print("Which one are you going to select(1 or 2)? : ");
             int selection = input.nextInt();
@@ -33,6 +34,7 @@ public class virus {
                 System.out.print("Enter x coordinate to move : ");
                 int xMove = input.nextInt();
                 //Move and show according error
+                //Make simple
                 if (xMove-xSelection == 1 || xMove - xSelection == -1 || xMove - xSelection == 2
                         || xMove - xSelection == -2 || xMove-xSelection == 0) {
                     System.out.print("Enter y coordinate to move : ");
@@ -54,8 +56,9 @@ public class virus {
                             System.out.println("Error! That place is occupied.");
                         }
                         //infect
-                        for (int i = -1; i < 2; i++) {
-                            for (int j = -1; j < 2; j++) {
+                        //add boundary
+                        for (int i = -1; i <= 1; i++) {
+                            for (int j = -1; j <= 1; j++) {
                                 if(xMove + i != -1 && yMove + j != -1) {
                                     if (map[xMove + i][yMove + j] != selection && map[xMove + i][yMove + j] != 0) {
                                         map[xMove + i][yMove + j] = selection;
