@@ -27,13 +27,7 @@ public class virus_revised {
                 continue;
             }
 
-            for (int i = inputX - 2; i <= inputX + 2; i++) {
-                for (int j = inputY - 2; j <= inputY + 2; j++) {
-                    if (i >= 0 && j >= 0 && i < map.length && j < map.length && map[j][i] == 0) {
-                        map[j][i] = 5;
-                    }
-                }
-            }
+            map = addFive(map, inputX, inputY);
             printMap(map);
 
             // Get destination coordinates of the cell I want to move to.
@@ -59,39 +53,16 @@ public class virus_revised {
                 continue;
             }
             //erase 5
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j ++) {
-                    if (map[i][j] == 5) {
-                        map[i][j] = 0;
-                    }
-                }
-            }
+            map = eraseFive(map);
 
             // Infect surrounding cells after moving to the destination coordinates.
-            for (int i = outputX - 1; i <= outputX + 1; i++) {
-                for (int j = outputY - 1; j <= outputY + 1; j++) {
-                    if (i >= 0 && j >= 0 && i < map.length && j < map.length && map[j][i] != 0) {
-                        map[j][i] = map[outputY][outputX];
-                    }
-                }
-            }
+            map = infect(map, outputX, outputY);
+
             //change turn
             selection = (selection % 2) + 1;
             // show score
-            int countOne = 0;
-            int countTwo = 0;
+            displayScore(map);
 
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j ++) {
-                    if (map[i][j] == 1) {
-                        countOne++;
-                    }
-                    if (map[i][j] == 2) {
-                        countTwo++;
-                    }
-                }
-            }
-            System.out.println("Score 1 vs 2 = " + countOne + " : " + countTwo);
             //Gameover
             printMap(map);
             if (gameOverCase01(map, selection)) {
@@ -150,6 +121,56 @@ public class virus_revised {
             diff = diffX;
         }
         return diff;
+    }
+
+    public static int[][] addFive (int[][] map, int inputX, int inputY) {
+        for (int i = inputX - 2; i <= inputX + 2; i++) {
+            for (int j = inputY - 2; j <= inputY + 2; j++) {
+                if (i >= 0 && j >= 0 && i < map.length && j < map.length && map[j][i] == 0) {
+                    map[j][i] = 5;
+                }
+            }
+        }
+        return map;
+    }
+
+    public static int[][] eraseFive (int[][] map) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j ++) {
+                if (map[i][j] == 5) {
+                    map[i][j] = 0;
+                }
+            }
+        }
+        return map;
+    }
+
+    public static int[][] infect (int[][] map, int outputX, int outputY) {
+        for (int i = outputX - 1; i <= outputX + 1; i++) {
+            for (int j = outputY - 1; j <= outputY + 1; j++) {
+                if (i >= 0 && j >= 0 && i < map.length && j < map.length && map[j][i] != 0) {
+                    map[j][i] = map[outputY][outputX];
+                }
+            }
+        }
+        return map;
+    }
+
+    public static void displayScore (int[][] map) {
+        int countOne = 0;
+        int countTwo = 0;
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j ++) {
+                if (map[i][j] == 1) {
+                    countOne++;
+                }
+                if (map[i][j] == 2) {
+                    countTwo++;
+                }
+            }
+        }
+        System.out.println("Score 1 vs 2 = " + countOne + " : " + countTwo);
     }
     // When there is no cell to move
     public static boolean gameOverCase01 (int[][] map, int selection) {
