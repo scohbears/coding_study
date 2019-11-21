@@ -12,9 +12,9 @@ public class virus_revised {
             System.out.println(selection + "'s turn!");
 
             // Get source coordinates of the cell I want to move.
-            System.out.print("Choose Y on the  map: ");
+            System.out.print("Choose inputY on the  map: ");
             int inputY = s.nextInt();
-            System.out.print("Choose X on the map: ");
+            System.out.print("Choose inputX on the map: ");
             int inputX = s.nextInt();
             // Cell must be owned by either player1 or player2.
             if (map[inputY][inputX] != 1 && map[inputY][inputX] != 2) {
@@ -29,55 +29,65 @@ public class virus_revised {
 
             map = addFive(map, inputX, inputY);
             printMap(map);
-
-            // Get destination coordinates of the cell I want to move to.
-            System.out.print("input Y which you want to move: ");
-            int outputY = s.nextInt();
-            System.out.print("input X which you want to move: ");
-            int outputX = s.nextInt();
-            // Cannot move to a cell that is occupied.
-            if (map[outputY][outputX] == 1 || map[outputY][outputX] == 2) {
-                System.out.println("Invalid location!");
-                continue;
-            }
-
-            // Get the distance a cell is moving.
-            int diff = getCellDiff(inputX, inputY, outputX, outputY);
-            if (diff == 1) {
-                map[outputY][outputX] = map[inputY][inputX];
-            } else if (diff == 2) {
-                map[outputY][outputX] = map[inputY][inputX];
-                map[inputY][inputX] = 0;
-            } else {
-                System.out.println("You tried to move too much!");
-                continue;
-            }
-            //erase 5
-            map = eraseFive(map);
-
-            // Infect surrounding cells after moving to the destination coordinates.
-            map = infect(map, outputX, outputY);
-
-            //change turn
-            selection = (selection % 2) + 1;
-            // show score
-            displayScore(map);
-
-            //Gameover
-            printMap(map);
-            if (gameOverCase01(map, selection)) {
-                System.out.println("Gameover!");
-                System.out.println("If you want to restart press '0': ");
-                int restart = s.nextInt();
-                if (restart == 0) {
-                    System.out.println("New game start!");
-                    map = getMap();
+            while (true) {
+                // Get destination coordinates of the cell I want to move to.
+                System.out.print("Choose outputY which you want to move: ");
+                int outputY = s.nextInt();
+                System.out.print("Choose outputX which you want to move: ");
+                int outputX = s.nextInt();
+                // Cannot move to a cell that is occupied.
+                if (map[outputY][outputX] == selection) {
+                    inputX = outputX;
+                    inputY = outputY;
+                    System.out.println("Input Changed ! inputX = " + inputX + " inputY  = " + inputY);
+                    map = addFive(map, inputX, inputY);
                     printMap(map);
-                    selection = 1;
                     continue;
-                } else {
-                    break;
                 }
+                if (map[outputY][outputX] != selection) {
+                    if (map[outputY][outputX] != 5) {
+                        System.out.println("Invalid location!");
+                        continue;
+                    }
+                }
+
+                // Get the distance a cell is moving.
+                int diff = getCellDiff(inputX, inputY, outputX, outputY);
+                if (diff == 1) {
+                    map[outputY][outputX] = map[inputY][inputX];
+                } else if (diff == 2) {
+                    map[outputY][outputX] = map[inputY][inputX];
+                    map[inputY][inputX] = 0;
+                } else {
+                    System.out.println("You tried to move too much!");
+                    continue;
+                }
+                //erase 5
+                map = eraseFive(map);
+
+                // Infect surrounding cells after moving to the destination coordinates.
+                map = infect(map, outputX, outputY);
+
+                //change turn
+                selection = (selection % 2) + 1;
+                // show score
+                displayScore(map);
+
+                //Gameover
+                printMap(map);
+                if (gameOverCase01(map, selection)) {
+                    System.out.println("Gameover!");
+                    System.out.println("If you want to restart press '0': ");
+                    int restart = s.nextInt();
+                    if (restart == 0) {
+                        System.out.println("New game start!");
+                        map = getMap();
+                        printMap(map);
+                        selection = 1;
+                        continue;
+                    }
+                }
+                break;
             }
         }
     }
@@ -93,14 +103,14 @@ public class virus_revised {
 
     public static int[][] getMap() {
         int[][] map = {
+                {1, 1, 2, 0, 0, 0, 0, 0},
                 {2, 2, 2, 0, 0, 0, 0, 0},
                 {2, 2, 2, 0, 0, 0, 0, 0},
-                {2, 2, 2, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0, 0},
-                {2, 0, 0, 0, 1, 0, 0, 0}};
+                {2, 0, 0, 0, 0, 0, 0, 0}};
         return map;
     }
 
